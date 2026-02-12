@@ -16,6 +16,97 @@
             touch-action: none;
             position: fixed;
             width: 100%;
+            background: #000;
+            font-family: sans-serif;
+        }
+
+        #slideshow-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .slide-wrapper {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-frame {
+            position: relative;
+            z-index: 20;
+            width: 85vw;
+            max-width: 320px;
+            aspect-ratio: 1/1;
+            background: white;
+            padding: 8px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .slide-bg-blur {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(30px) brightness(0.4);
+            z-index: 5;
+            transform: scale(1.2);
+        }
+
+        .slide-img-main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 24px;
+            width: 90vw;
+            max-width: 340px;
+            text-align: center;
+            z-index: 30;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.6);
+            pointer-events: none;
+            z-index: 10;
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.5);
+                opacity: 0;
+            }
         }
 
         @keyframes heartBeat {
@@ -34,220 +125,204 @@
             animation: heartBeat 1.4s infinite;
         }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(1);
+        .recording-pulse {
+            animation: pulse 1s infinite;
+            background: #ef4444 !important;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
                 opacity: 1;
             }
 
-            100% {
-                transform: translateY(-120px) scale(0.5);
-                opacity: 0;
+            50% {
+                opacity: 0.5;
             }
-        }
-
-        .trail-heart {
-            position: fixed;
-            pointer-events: none;
-            z-index: 500;
-            animation: floatUp 1.2s ease-out forwards;
-        }
-
-        @keyframes globalFloat {
-            0% {
-                transform: translateY(110vh) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: translateY(-10vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .bg-heart {
-            position: absolute;
-            pointer-events: none;
-            animation: globalFloat 6s linear forwards;
-            z-index: 10;
-        }
-
-        .slide-container {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding-bottom: 15vh;
-        }
-
-        .image-frame {
-            position: relative;
-            z-index: 20;
-            width: 80vw;
-            max-width: 340px;
-            aspect-ratio: 4/5;
-            background: white;
-            padding: 10px;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .slide-bg-blur {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: blur(25px) brightness(0.4);
-            z-index: 5;
-            transform: scale(1.1);
-        }
-
-        .slide-img-main {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-
-        .slide-container.active {
-            opacity: 1;
         }
     </style>
 </head>
 
-<body class="bg-pink-50 min-h-[100dvh] flex items-center justify-center p-4 select-none">
+<body class="bg-pink-50 min-h-[100dvh] flex items-center justify-center select-none text-slate-800">
 
     <div id="setup-form"
-        class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[90dvh] overflow-y-auto">
-        <h1 class="text-2xl font-bold text-pink-600 mb-4 text-center">Val Card Creator 💖</h1>
+        class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[95dvh] overflow-y-auto m-4">
+        <h1 class="text-2xl font-bold text-pink-600 mb-1 text-center">Val Card Creator 💖</h1>
+        <p class="text-[10px] text-center text-gray-400 mb-4 tracking-widest uppercase">Designed by kofilartey</p>
+
         <div class="space-y-4">
             <input type="text" id="input-name" placeholder="Valentine's Name"
-                class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-pink-400">
-            <textarea id="input-msg" placeholder="Romantic Message..."
-                class="w-full p-3 border rounded-xl outline-none h-20"></textarea>
+                class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-pink-300">
+            <textarea id="input-msg" placeholder="Your Romantic Message..."
+                class="w-full p-3 border rounded-xl outline-none h-20 focus:ring-2 focus:ring-pink-300"></textarea>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1 text-center">Pick a Song 🎵</label>
+            <div class="border-2 border-dashed border-pink-200 rounded-xl p-4 text-center">
+                <label class="block text-sm font-semibold text-pink-600 mb-2 cursor-pointer">
+                    Upload Photos 📸
+                    <input type="file" id="file-input" multiple accept="image/*" class="hidden"
+                        onchange="handleFileUpload(this)">
+                </label>
+                <div id="preview-container" class="flex gap-2 mt-2 overflow-x-auto"></div>
+            </div>
+
+            <div class="bg-pink-50 p-4 rounded-xl space-y-3">
+                <label class="block text-xs font-bold text-gray-500 uppercase text-center">Step 1: Background
+                    Song</label>
                 <select id="song-select"
-                    class="w-full p-3 border rounded-xl outline-none bg-gray-50 focus:ring-2 focus:ring-pink-400">
+                    class="w-full p-3 border rounded-xl outline-none bg-white text-sm focus:ring-2 focus:ring-pink-400">
                     <option
                         value="https://res.cloudinary.com/djjgkezui/video/upload/v1770898393/Ed_Sheeran_-_Perfect_ro1nmm.mp3">
                         Ed Sheeran - Perfect</option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904553/John_Legend_-_All_of_Me_Official_Video_hiavsf.mp3">John Legend - All of Me
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904553/John_Legend_-_All_of_Me_Official_Video_hiavsf.mp3">Akwaboah - Obiaa x Cina Soul
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904946/Dadea_Anoma_umghib.mp3">kwabena kwabena - Dadea Anoma
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905062/Meye_ounvt2.mp3">kwabena kwabena - Meye
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905169/Samini_-_My_Own_Official_Video_hipo33.mp3">Samini - My Own
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905264/Sean_Kingston_-_Me_Love_Official_Video_mnlorc.mp3">Sean Kingston - Me Love
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905379/Akon-beautiful_rxitsl.mp3">Akon - Beautiful
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905491/Chris_Brown_-_With_You_Official_HD_Video_iqxx8x.mp3">Chris Brown - With You
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905629/P_Square_-_No_One_Like_You_Official_Video_tjwaqr.mp3">P Square - No One Like You
-                    </option>
-                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905725/Jidenna_-_Bambi_Official_Video_ezkkfj.mp3">Jidenna - Bambi
-                    </option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904553/John_Legend_-_All_of_Me_Official_Video_hiavsf.mp3">
+                        John Legend - All of Me</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770914245/Akwaboah_-_Obiaa_ft._Cina_Soul_ux8vzl.mp3">
+                        Akwaboah - Obiaa x Cina Soul</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904946/Dadea_Anoma_umghib.mp3">
+                        Kwabena Kwabena - Dadea Anoma</option>
+                    <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905062/Meye_ounvt2.mp3">
+                        Kwabena Kwabena - Meye</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905169/Samini_-_My_Own_Official_Video_hipo33.mp3">
+                        Samini - My Own</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905264/Sean_Kingston_-_Me_Love_Official_Video_mnlorc.mp3">
+                        Sean Kingston - Me Love</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905379/Akon-beautiful_rxitsl.mp3">
+                        Akon - Beautiful</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905491/Chris_Brown_-_With_You_Official_HD_Video_iqxx8x.mp3">
+                        Chris Brown - With You</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905629/P_Square_-_No_One_Like_You_Official_Video_tjwaqr.mp3">
+                        P Square - No One Like You</option>
+                    <option
+                        value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905725/Jidenna_-_Bambi_Official_Video_ezkkfj.mp3">
+                        Jidenna - Bambi</option>
                 </select>
-            </div>
 
-            <input type="text" id="input-images" placeholder="Image URLs (comma separated)"
-                class="w-full p-3 border rounded-xl outline-none">
+                <label class="block text-xs font-bold text-gray-500 uppercase text-center">Step 2: Voice Over
+                    (Optional)</label>
+                <div class="flex gap-2">
+                    <button id="record-btn" onclick="toggleRecording()"
+                        class="flex-1 bg-gray-800 text-white py-2 rounded-lg text-[10px] font-bold uppercase">Record
+                        Voice 🎙️</button>
+                    <label
+                        class="flex-1 text-center cursor-pointer bg-white border border-pink-300 py-2 rounded-lg text-[10px] text-pink-600 font-bold uppercase">
+                        Upload MP3
+                        <input type="file" id="audio-input" accept="audio/*" class="hidden"
+                            onchange="handleAudioUpload(this)">
+                    </label>
+                </div>
+                <div id="audio-status" class="text-[10px] text-center text-pink-500 font-medium h-4 italic"></div>
+            </div>
 
             <button onclick="generateLink()"
-                class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl hover:bg-pink-600 transition active:scale-95 shadow-lg">
-                1. Create & Copy Link 🔗
-            </button>
-
-            <div id="share-buttons" class="hidden grid grid-cols-2 gap-3 animate-in fade-in duration-500">
+                class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-pink-600 transition-all">Create
+                Link 🔗</button>
+            <div id="share-buttons" class="hidden grid grid-cols-2 gap-3 mt-2">
                 <button onclick="shareWhatsApp()"
-                    class="bg-[#25D366] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95">
-                    WhatsApp
-                </button>
+                    class="bg-[#25D366] text-white font-bold py-3 rounded-xl text-sm text-center">WhatsApp</button>
                 <button onclick="shareSnapchat()"
-                    class="bg-[#FFFC00] text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95">
-                    Snapchat
-                </button>
+                    class="bg-[#FFFC00] text-black font-bold py-3 rounded-xl text-sm text-center">Snapchat</button>
             </div>
-
-            <p id="share-hint" class="text-center text-xs text-gray-400 hidden italic mt-2">Link copied! Now share it
-                with your Valentine.</p>
         </div>
     </div>
 
     <div id="card-display" class="hidden flex flex-col items-center justify-center w-full h-[100dvh]">
         <audio id="bg-music" loop></audio>
+        <audio id="voice-audio" crossorigin="anonymous"></audio>
 
         <div id="click-area" class="flex flex-col items-center justify-center cursor-pointer text-center z-[400]">
-            <svg viewBox="0 0 24 24" class="w-56 h-56 fill-white stroke-pink-300 stroke-1 drop-shadow-2xl animate-beat">
+            <svg viewBox="0 0 24 24" class="w-56 h-56 fill-pink-500 stroke-white stroke-1 animate-beat">
                 <path
                     d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
-            <h2 class="text-pink-500 font-black mt-6 text-2xl animate-bounce tracking-wide">Tap to See My Message</h2>
+            <h2 class="text-pink-600 font-black mt-6 text-2xl animate-bounce">Tap to Open 💖</h2>
+            <p class="text-pink-400 text-[10px] mt-4 uppercase tracking-[0.2em]">Designed by kofilartey</p>
         </div>
 
         <div id="hero-page" class="fixed inset-0 z-50 opacity-0 invisible transition-opacity duration-1000">
-            <div id="slideshow-container" class="absolute inset-0 bg-neutral-900"></div>
-
-            <div class="absolute bottom-8 left-0 right-0 z-[150] flex flex-col items-center px-4">
-                <div
-                    class="bg-white/10 backdrop-blur-xl p-6 rounded-[28px] border border-white/20 w-full max-w-sm shadow-2xl text-center">
-                    <div class="mb-1 animate-beat text-3xl">❤️</div>
-                    <h1 id="display-name" class="text-white text-2xl font-bold italic mb-1 tracking-tight"></h1>
-                    <p id="display-msg" class="text-pink-100 text-base font-light leading-snug"></p>
-                </div>
-            </div>
+            <div id="slideshow-container"></div>
+            <div id="heart-container" class="absolute inset-0 pointer-events-none"></div>
         </div>
     </div>
 
     <script>
+        const CLOUD_NAME = "djjgkezui";
+        const UPLOAD_PRESET = "ml_default";
+
+        let uploadedImageUrls = [];
+        let customVoiceUrl = null;
         let images = [];
-        let currentSlide = 0;
-        let activeExperience = false;
-        let generatedUrl = "";
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        async function handleFileUpload(input) {
+            for (let file of input.files) {
+                const fd = new FormData();
+                fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET);
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.secure_url) {
+                    uploadedImageUrls.push(data.secure_url);
+                    document.getElementById('preview-container').innerHTML += `<img src="${data.secure_url}" class="w-10 h-10 object-cover rounded-lg border-2 border-pink-200">`;
+                }
+            }
+        }
+
+        async function toggleRecording() {
+            const btn = document.getElementById('record-btn');
+            if (!isRecording) {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => uploadAudio(new Blob(audioChunks, { type: 'audio/mp3' }));
+                mediaRecorder.start();
+                isRecording = true;
+                btn.innerText = "Stop & Save ⏹️";
+                btn.classList.add('recording-pulse');
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                btn.innerText = "Record Voice 🎙️";
+                btn.classList.remove('recording-pulse');
+            }
+        }
+
+        async function handleAudioUpload(input) { if (input.files[0]) uploadAudio(input.files[0]); }
+
+        async function uploadAudio(file) {
+            document.getElementById('audio-status').innerText = "Processing Voice... ⏳";
+            const fd = new FormData();
+            fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET); fd.append('resource_type', 'video');
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.secure_url) {
+                customVoiceUrl = data.secure_url;
+                document.getElementById('audio-status').innerText = "Voice Ready! ✅";
+            }
+        }
 
         function generateLink() {
             const data = {
-                n: document.getElementById('input-name').value || "Valentine",
-                m: document.getElementById('input-msg').value || "I have a special message for you...",
+                n: document.getElementById('input-name').value || "My Love",
+                m: document.getElementById('input-msg').value || "Happy Valentine's Day!",
                 s: document.getElementById('song-select').value,
-                i: document.getElementById('input-images').value
+                v: customVoiceUrl,
+                i: uploadedImageUrls.join(',')
             };
             const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
-            generatedUrl = window.location.origin + window.location.pathname + '?v=' + encoded;
-
-            navigator.clipboard.writeText(generatedUrl);
-
-            // Show share buttons
+            const url = window.location.origin + window.location.pathname + '?v=' + encoded;
+            navigator.clipboard.writeText(url);
             document.getElementById('share-buttons').classList.remove('hidden');
-            document.getElementById('share-buttons').classList.add('grid');
-            document.getElementById('share-hint').classList.remove('hidden');
-        }
-
-        function shareWhatsApp() {
-            const text = encodeURIComponent("I made something special for you! Check it out: " + generatedUrl);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
-        }
-
-        function shareSnapchat() {
-            // Snapchat doesn't have a direct "Send Message" API via URL 
-            // So we copy to clipboard (already done) and open the app
-            alert("Link copied! Now paste it in Snapchat.");
-            window.location.href = "snapchat://";
+            alert("Link Copied! Send it to your Valentine. ❤️");
         }
 
         window.onload = () => {
@@ -255,74 +330,91 @@
             if (params.has('v')) {
                 document.getElementById('setup-form').classList.add('hidden');
                 document.getElementById('card-display').classList.remove('hidden');
-                try {
-                    const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
-                    document.getElementById('display-name').innerText = data.n;
-                    document.getElementById('display-msg').innerText = data.m;
-                    document.getElementById('bg-music').src = data.s;
+                const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
+                images = data.i.split(',').filter(u => u !== "");
+                if (!images.length) images.push("https://images.unsplash.com/photo-1518199266791-5375a83190b7");
 
-                    images = data.i.split(',').filter(url => url.trim() !== "").map(s => s.trim());
-                    const container = document.getElementById('slideshow-container');
-
-                    if (images.length === 0) images.push('https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000');
-
-                    images.forEach((url, index) => {
-                        const slideWrap = document.createElement('div');
-                        slideWrap.className = `slide-container ${index === 0 ? 'active' : ''}`;
-                        slideWrap.innerHTML = `<img src="${url}" class="slide-bg-blur"><div class="image-frame"><img src="${url}" class="slide-img-main"></div>`;
-                        container.appendChild(slideWrap);
-                    });
-                } catch (e) { console.error("Data error", e); }
+                const container = document.getElementById('slideshow-container');
+                images.forEach(url => {
+                    container.innerHTML += `
+                        <div class="slide-wrapper">
+                            <img src="${url}" class="slide-bg-blur">
+                            <div class="image-frame"><img src="${url}" class="slide-img-main"></div>
+                            <div class="message-box">
+                                <h1 class="text-white text-2xl font-bold italic mb-1">${data.n}</h1>
+                                <p class="text-pink-100 text-sm font-light">${data.m}</p>
+                                <p class="text-[8px] text-pink-300 mt-4 uppercase tracking-widest opacity-50">Designed by kofilartey</p>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('bg-music').src = data.s;
+                if (data.v) document.getElementById('voice-audio').src = data.v;
             }
         };
 
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'heart-particle';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.getElementById('heart-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
         document.getElementById('click-area').addEventListener('click', function () {
-            this.classList.add('hidden');
-            this.classList.remove('flex');
-            activeExperience = true;
+            this.style.display = 'none';
             document.getElementById('hero-page').classList.remove('opacity-0', 'invisible');
-            document.getElementById('bg-music').play();
-            if (images.length > 1) setInterval(nextSlide, 4500);
-            setInterval(spawnBgHeart, 400);
+
+            const bgMusic = document.getElementById('bg-music');
+            const voiceAudio = document.getElementById('voice-audio');
+
+            setInterval(spawnHeart, 300);
+
+            if (voiceAudio.src && voiceAudio.src !== window.location.href) {
+                // VOLUME BOOST LOGIC
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = audioCtx.createMediaElementSource(voiceAudio);
+                    const gainNode = audioCtx.createGain();
+
+                    gainNode.gain.value = 2.5; // BOOST VOICE BY 250%
+
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                } catch (e) { console.log("Audio boost failed, playing normal"); }
+
+                bgMusic.volume = 0.15; // Lower music
+                bgMusic.play();
+                voiceAudio.play();
+
+                voiceAudio.onended = () => {
+                    let vol = 0.15;
+                    let interval = setInterval(() => {
+                        vol += 0.05;
+                        bgMusic.volume = Math.min(vol, 1);
+                        if (vol >= 1) clearInterval(interval);
+                    }, 150);
+                };
+            } else {
+                bgMusic.volume = 1;
+                bgMusic.play();
+            }
+
+            if (images.length > 1) {
+                let current = 0;
+                setInterval(() => {
+                    current = (current + 1) % images.length;
+                    document.getElementById('slideshow-container').style.transform = `translateX(-${current * 100}%)`;
+                }, 4500);
+            }
         });
 
-        const handleInteraction = (e) => {
-            if (!activeExperience) return;
-            const x = e.touches ? e.touches[0].clientX : e.clientX;
-            const y = e.touches ? e.touches[0].clientY : e.clientY;
-            spawnTrailHeart(x, y);
-        };
-
-        window.addEventListener('mousemove', handleInteraction);
-        window.addEventListener('touchstart', handleInteraction);
-
-        function spawnTrailHeart(x, y) {
-            const h = document.createElement('div');
-            h.innerHTML = '❤️';
-            h.className = 'trail-heart';
-            h.style.left = (x - 10) + 'px';
-            h.style.top = (y - 10) + 'px';
-            h.style.fontSize = Math.random() * 12 + 12 + 'px';
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 1100);
-        }
-
-        function spawnBgHeart() {
-            const h = document.createElement('div');
-            h.innerHTML = ['❤️', '💖', '🌸', '✨'][Math.floor(Math.random() * 4)];
-            h.className = 'bg-heart';
-            h.style.left = (Math.random() * 85 + 5) + 'vw';
-            h.style.fontSize = Math.random() * 15 + 20 + 'px';
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 6000);
-        }
-
-        function nextSlide() {
-            const slides = document.querySelectorAll('.slide-container');
-            if (slides.length < 2) return;
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
+        function shareWhatsApp() {
+            navigator.clipboard.readText().then(text => {
+                window.open(`https://wa.me/?text=${encodeURIComponent("I have a surprise for you: " + text)}`);
+            });
         }
     </script>
 </body>
