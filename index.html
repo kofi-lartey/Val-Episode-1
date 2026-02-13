@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Premium Val Card Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         html,
         body {
@@ -521,7 +521,16 @@
 
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
-            new QRCode(qrContainer, { text: finalGeneratedUrl, width: 200, height: 200 });
+
+            // Create a canvas element for the QR code
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            qrContainer.appendChild(canvas);
+
+            QRCode.toCanvas(canvas, finalGeneratedUrl, { width: 200, height: 200 }, function (error) {
+                if (error) console.error(error);
+            });
 
             navigator.clipboard.writeText(finalGeneratedUrl);
             document.getElementById('share-buttons').classList.remove('hidden');
@@ -529,8 +538,13 @@
         }
 
         function downloadQR() {
-            const img = document.querySelector("#qrcode img");
-            if (img) { const link = document.createElement("a"); link.href = img.src; link.download = "valentine-qr.png"; link.click(); }
+            const canvas = document.querySelector("#qrcode canvas");
+            if (canvas) {
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "valentine-qr.png";
+                link.click();
+            }
         }
 
         function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Surprise for you: " + finalGeneratedUrl)}`); }
