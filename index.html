@@ -40,11 +40,13 @@
             padding: 20px;
         }
 
+        /* Desktop Fix: Added max-height and controlled aspect ratio */
         .image-frame {
             position: relative;
             z-index: 20;
             width: 85vw;
-            max-width: 320px;
+            max-width: 400px;
+            max-height: 50vh;
             aspect-ratio: 1/1;
             background: white;
             padding: 8px;
@@ -80,7 +82,8 @@
             padding: 20px;
             border-radius: 24px;
             width: 90vw;
-            max-width: 340px;
+            max-width: 400px;
+            /* Fixed width for desktop */
             text-align: center;
             z-index: 30;
         }
@@ -141,6 +144,19 @@
                 opacity: 0.5;
             }
         }
+
+        #coffee-modal {
+            transition: all 0.3s ease-in-out;
+            transform: scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #coffee-modal.active {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
 
@@ -149,12 +165,7 @@
     <div id="setup-form"
         class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[95dvh] overflow-y-auto m-4">
         <h1 class="text-2xl font-bold text-pink-600 mb-1 text-center">Val Card Creator 💖</h1>
-        <p class="text-[10px] text-center text-gray-400 mb-2 tracking-widest uppercase">Designed by kofilartey</p>
-
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-2 mb-4 text-center">
-            <p class="text-[11px] text-yellow-700 font-medium">If I made your day, you can buy me coffee via Momo: <span
-                    class="font-bold">0531114795</span> ☕</p>
-        </div>
+        <p class="text-[10px] text-center text-gray-400 mb-4 tracking-widest uppercase">Designed by kofilartey</p>
 
         <div class="space-y-4">
             <input type="text" id="input-name" placeholder="Valentine's Name"
@@ -175,7 +186,7 @@
                 <label class="block text-xs font-bold text-gray-500 uppercase text-center">Step 1: Background
                     Song</label>
                 <select id="song-select"
-                    class="w-full p-3 border rounded-xl outline-none bg-white text-sm focus:ring-2 focus:ring-pink-400">
+                    class="w-full p-3 border rounded-xl outline-none bg-gray-50 focus:ring-2 focus:ring-pink-400">
                     <option
                         value="https://res.cloudinary.com/djjgkezui/video/upload/v1770898393/Ed_Sheeran_-_Perfect_ro1nmm.mp3">
                         Ed Sheeran - Perfect</option>
@@ -255,10 +266,41 @@
             <div id="slideshow-container"></div>
             <div id="heart-container" class="absolute inset-0 pointer-events-none"></div>
 
-            <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
-                class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-xl">
-                Create Your Own 💖
-            </a>
+            <button onclick="toggleCoffeeModal()"
+                class="absolute top-6 right-6 z-[100] bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 shadow-lg">
+                ☕
+            </button>
+
+            <div id="coffee-modal"
+                class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
+                <div class="bg-white rounded-3xl p-8 max-w-xs w-full text-center shadow-2xl relative">
+                    <button onclick="toggleCoffeeModal()" class="absolute top-4 right-4 text-gray-400">✕</button>
+                    <div class="text-4xl mb-4">☕</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Buy me a coffee?</h3>
+                    <p class="text-sm text-gray-500 mb-6">If this made your day, you can support me via MTN Momo:</p>
+                    <div
+                        class="bg-yellow-50 border-2 border-yellow-200 py-3 rounded-2xl font-mono text-lg font-bold text-yellow-700">
+                        0531114795</div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 left-0 right-0 z-[100] flex flex-col items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="location.reload()"
+                        class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Close
+                        ✕</button>
+                    <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
+                        class="bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-xl">Create
+                        Yours 💖</a>
+                </div>
+                <button id="replay-voice-btn" onclick="replayVoice()"
+                    class="hidden bg-pink-500/80 backdrop-blur-sm text-white p-3 rounded-full shadow-lg">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -320,6 +362,8 @@
             }
         }
 
+        function toggleCoffeeModal() { document.getElementById('coffee-modal').classList.toggle('active'); }
+
         function generateLink() {
             const data = {
                 n: document.getElementById('input-name').value || "My Love",
@@ -333,6 +377,15 @@
             navigator.clipboard.writeText(url);
             document.getElementById('share-buttons').classList.remove('hidden');
             alert("Link Copied! Send it to your Valentine. ❤️");
+        }
+
+        function replayVoice() {
+            const voice = document.getElementById('voice-audio');
+            const bg = document.getElementById('bg-music');
+            bg.volume = 0.15;
+            voice.currentTime = 0;
+            voice.play();
+            voice.onended = () => { bg.volume = 1.0; };
         }
 
         window.onload = () => {
@@ -358,7 +411,10 @@
                         </div>`;
                 });
                 document.getElementById('bg-music').src = data.s;
-                if (data.v) document.getElementById('voice-audio').src = data.v;
+                if (data.v) {
+                    document.getElementById('voice-audio').src = data.v;
+                    document.getElementById('replay-voice-btn').classList.remove('hidden');
+                }
             }
         };
 
@@ -383,19 +439,16 @@
             setInterval(spawnHeart, 300);
 
             if (voiceAudio.src && voiceAudio.src !== window.location.href) {
-                // VOLUME BOOST LOGIC
                 try {
                     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     const source = audioCtx.createMediaElementSource(voiceAudio);
                     const gainNode = audioCtx.createGain();
-
-                    gainNode.gain.value = 2.5; // BOOST VOICE BY 250%
-
+                    gainNode.gain.value = 2.5;
                     source.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
-                } catch (e) { console.log("Audio boost failed, playing normal"); }
+                } catch (e) { console.log("Audio boost failed"); }
 
-                bgMusic.volume = 0.15; // Lower music
+                bgMusic.volume = 0.15;
                 bgMusic.play();
                 voiceAudio.play();
 
