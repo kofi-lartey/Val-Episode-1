@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Premium Val Card Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         html,
         body {
@@ -305,7 +305,7 @@
         onclick="toggleQRModal()">
         <div class="bg-white p-6 rounded-3xl text-center max-w-xs w-full shadow-2xl" onclick="event.stopPropagation()">
             <h3 class="font-bold text-gray-800 mb-4">Your QR Code ❤️</h3>
-            <div id="qrcode" class="flex justify-center mb-6"></div>
+            <div id="qrcode" class="flex justify-center mb-6" style="min-height: 180px;"></div>
             <div class="flex flex-col gap-2">
                 <button onclick="downloadQR()"
                     class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl text-xs">Save QR to Device</button>
@@ -343,15 +343,11 @@
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Support the Creator</h3>
                     <p class="text-xs text-gray-500 mb-4 px-2">If this made your day, you can support my work via MTN
                         Momo:</p>
-
                     <div onclick="copyMomo()"
-                        class="group cursor-pointer bg-yellow-50 border-2 border-yellow-200 py-3 rounded-2xl font-mono text-lg font-bold text-yellow-700 mb-6 flex flex-col items-center justify-center hover:bg-yellow-100 transition-colors">
+                        class="cursor-pointer bg-yellow-50 border-2 border-yellow-200 py-3 rounded-2xl font-mono text-lg font-bold text-yellow-700 mb-6 flex flex-col items-center">
                         <span id="momo-number">0531114795</span>
-                        <span id="copy-status"
-                            class="text-[9px] text-yellow-600 font-sans uppercase tracking-tighter mt-1">Click to
-                            copy</span>
+                        <span id="copy-status" class="text-[9px] text-yellow-600 uppercase mt-1">Click to copy</span>
                     </div>
-
                     <a href="https://wa.me/233557655008" target="_blank"
                         class="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-2xl font-bold text-sm">Chat
                         with me</a>
@@ -390,36 +386,25 @@
         let audioChunks = [];
         let finalGeneratedUrl = "";
 
-        // --- MOMO COPY LOGIC ---
+        // --- MOMO COPY ---
         function copyMomo() {
             const num = document.getElementById('momo-number').innerText;
             const status = document.getElementById('copy-status');
-            navigator.clipboard.writeText(num);
-            status.innerText = "Copied! ✅";
-            status.classList.add('text-green-600');
-            setTimeout(() => {
-                status.innerText = "Click to copy";
-                status.classList.remove('text-green-600');
-            }, 2000);
+            navigator.clipboard.writeText(num).then(() => {
+                status.innerText = "Copied! ✅";
+                setTimeout(() => status.innerText = "Click to copy", 2000);
+            });
         }
 
-        // --- PREVIEW AUDIO LOGIC ---
+        // --- PREVIEW AUDIO ---
         const previewAudio = document.getElementById('preview-audio');
         const previewBtnIcon = document.getElementById('preview-icon');
 
         function togglePreview() {
             const songUrl = document.getElementById('song-select').value;
-            if (previewAudio.src !== songUrl) {
-                previewAudio.src = songUrl;
-            }
-
-            if (previewAudio.paused) {
-                previewAudio.play();
-                previewBtnIcon.innerText = "⏹️";
-            } else {
-                previewAudio.pause();
-                previewBtnIcon.innerText = "▶️";
-            }
+            if (previewAudio.src !== songUrl) previewAudio.src = songUrl;
+            if (previewAudio.paused) { previewAudio.play(); previewBtnIcon.innerText = "⏹️"; }
+            else { previewAudio.pause(); previewBtnIcon.innerText = "▶️"; }
         }
 
         function stopPreview() {
@@ -427,7 +412,6 @@
             previewAudio.currentTime = 0;
             previewBtnIcon.innerText = "▶️";
         }
-
         previewAudio.onended = stopPreview;
 
         // --- UI ANIMATIONS ---
@@ -522,15 +506,12 @@
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
 
-            // Create a canvas element for the QR code
-            const canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
-            qrContainer.appendChild(canvas);
+            // FIX: Open modal first so container is visible for the QR library
+            document.getElementById('qr-modal').classList.add('active');
 
-            QRCode.toCanvas(canvas, finalGeneratedUrl, { width: 200, height: 200 }, function (error) {
-                if (error) console.error(error);
-            });
+            setTimeout(() => {
+                new QRCode(qrContainer, { text: finalGeneratedUrl, width: 180, height: 180 });
+            }, 150);
 
             navigator.clipboard.writeText(finalGeneratedUrl);
             document.getElementById('share-buttons').classList.remove('hidden');
@@ -538,13 +519,8 @@
         }
 
         function downloadQR() {
-            const canvas = document.querySelector("#qrcode canvas");
-            if (canvas) {
-                const link = document.createElement("a");
-                link.href = canvas.toDataURL("image/png");
-                link.download = "valentine-qr.png";
-                link.click();
-            }
+            const img = document.querySelector("#qrcode img");
+            if (img) { const link = document.createElement("a"); link.href = img.src; link.download = "valentine-qr.png"; link.click(); }
         }
 
         function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Surprise for you: " + finalGeneratedUrl)}`); }
@@ -556,7 +532,7 @@
             voice.onended = () => { bg.volume = 1.0; };
         }
 
-        // --- WINDOW LOAD & CARD OPENING ---
+        // --- WINDOW LOAD ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('v')) {
@@ -576,7 +552,7 @@
                                 <div class="message-box">
                                     <h1 class="text-white text-2xl font-bold italic mb-1">${data.n}</h1>
                                     <p class="text-pink-100 text-sm font-light mb-4">${data.m}</p>
-                                    <p class="text-[9px] text-white/40 uppercase tracking-widest border-t border-white/10 pt-3">Designed by kofilartey</p>
+                                    <p class="text-[9px] text-white/40 uppercase tracking-[0.2em] border-t border-white/10 pt-3">Designed by kofilartey</p>
                                 </div>
                             </div>`;
                     });
@@ -592,25 +568,15 @@
         document.getElementById('click-area').addEventListener('click', function () {
             this.style.display = 'none';
             document.getElementById('hero-page').classList.remove('opacity-0', 'invisible');
-
             const bgMusic = document.getElementById('bg-music');
             const voiceAudio = document.getElementById('voice-audio');
-
             setInterval(spawnHeart, 300);
             setInterval(spawnFlower, 600);
-
             const hasVoice = voiceAudio.src && voiceAudio.src !== window.location.href && voiceAudio.src !== "";
-
             if (hasVoice) {
-                bgMusic.volume = 0.15;
-                bgMusic.play();
-                voiceAudio.play();
+                bgMusic.volume = 0.15; bgMusic.play(); voiceAudio.play();
                 voiceAudio.onended = () => { bgMusic.volume = 1.0; };
-            } else {
-                bgMusic.volume = 1;
-                bgMusic.play();
-            }
-
+            } else { bgMusic.volume = 1; bgMusic.play(); }
             if (images.length > 1) {
                 let current = 0;
                 setInterval(() => {
