@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Premium Val Card Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         html,
         body {
@@ -40,7 +41,6 @@
             padding: 20px;
         }
 
-        /* Desktop Fix: Added max-height and controlled aspect ratio */
         .image-frame {
             position: relative;
             z-index: 20;
@@ -83,7 +83,6 @@
             border-radius: 24px;
             width: 90vw;
             max-width: 400px;
-            /* Fixed width for desktop */
             text-align: center;
             z-index: 30;
         }
@@ -145,17 +144,25 @@
             }
         }
 
-        #coffee-modal {
+        #coffee-modal,
+        #qr-modal {
             transition: all 0.3s ease-in-out;
             transform: scale(0.9);
             opacity: 0;
             pointer-events: none;
         }
 
-        #coffee-modal.active {
+        #coffee-modal.active,
+        #qr-modal.active {
             transform: scale(1);
             opacity: 1;
             pointer-events: auto;
+        }
+
+        #qrcode img {
+            margin: 0 auto;
+            border: 8px solid white;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -239,12 +246,33 @@
 
             <button onclick="generateLink()"
                 class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-pink-600 transition-all">Create
-                Link 🔗</button>
-            <div id="share-buttons" class="hidden grid grid-cols-2 gap-3 mt-2">
+                Card Link 🔗</button>
+
+            <div id="share-buttons" class="hidden space-y-3 mt-2">
                 <button onclick="shareWhatsApp()"
-                    class="bg-[#25D366] text-white font-bold py-3 rounded-xl text-sm text-center">WhatsApp</button>
-                <button onclick="shareSnapchat()"
-                    class="bg-[#FFFC00] text-black font-bold py-3 rounded-xl text-sm text-center">Snapchat</button>
+                    class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+                    Share to WhatsApp
+                </button>
+                <button onclick="toggleQRModal()"
+                    class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+                    Get QR Code 📸
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qr-modal" class="fixed inset-0 z-[500] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
+        onclick="toggleQRModal()">
+        <div class="bg-white p-6 rounded-3xl text-center max-w-xs w-full shadow-2xl" onclick="event.stopPropagation()">
+            <h3 class="font-bold text-gray-800 mb-4">Your QR Code ❤️</h3>
+            <div id="qrcode" class="flex justify-center mb-6"></div>
+            <p class="text-[11px] text-gray-500 mb-6 px-4">Save this image and send it! Your Valentine can scan it to
+                see their surprise.</p>
+
+            <div class="flex flex-col gap-2">
+                <button onclick="downloadQR()"
+                    class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl text-xs">Save QR to Device</button>
+                <button onclick="toggleQRModal()" class="w-full text-gray-400 font-bold py-2 text-xs">Close</button>
             </div>
         </div>
     </div>
@@ -267,9 +295,7 @@
             <div id="heart-container" class="absolute inset-0 pointer-events-none"></div>
 
             <button onclick="toggleCoffeeModal()"
-                class="absolute top-6 right-6 z-[100] bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 shadow-lg">
-                ☕
-            </button>
+                class="absolute top-6 right-6 z-[100] bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 shadow-lg">☕</button>
 
             <div id="coffee-modal"
                 class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
@@ -314,6 +340,7 @@
         let isRecording = false;
         let mediaRecorder;
         let audioChunks = [];
+        let finalGeneratedUrl = "";
 
         async function handleFileUpload(input) {
             for (let file of input.files) {
@@ -363,6 +390,7 @@
         }
 
         function toggleCoffeeModal() { document.getElementById('coffee-modal').classList.toggle('active'); }
+        function toggleQRModal() { document.getElementById('qr-modal').classList.toggle('active'); }
 
         function generateLink() {
             const data = {
@@ -373,10 +401,38 @@
                 i: uploadedImageUrls.join(',')
             };
             const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
-            const url = window.location.origin + window.location.pathname + '?v=' + encoded;
-            navigator.clipboard.writeText(url);
+            finalGeneratedUrl = window.location.origin + window.location.pathname + '?v=' + encoded;
+
+            // Create QR Code
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: finalGeneratedUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L // Low correction for complex long URLs
+            });
+
+            // Copy the long link automatically
+            navigator.clipboard.writeText(finalGeneratedUrl);
             document.getElementById('share-buttons').classList.remove('hidden');
-            alert("Link Copied! Send it to your Valentine. ❤️");
+            alert("Card Created & Link Copied! You can now use the QR code option.");
+        }
+
+        function downloadQR() {
+            const img = document.querySelector("#qrcode img");
+            if (img) {
+                const link = document.createElement("a");
+                link.href = img.src;
+                link.download = "valentine-qr.png";
+                link.click();
+            }
+        }
+
+        function shareWhatsApp() {
+            window.open(`https://wa.me/?text=${encodeURIComponent("I have a surprise for you: " + finalGeneratedUrl)}`);
         }
 
         function replayVoice() {
@@ -393,28 +449,30 @@
             if (params.has('v')) {
                 document.getElementById('setup-form').classList.add('hidden');
                 document.getElementById('card-display').classList.remove('hidden');
-                const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
-                images = data.i.split(',').filter(u => u !== "");
-                if (!images.length) images.push("https://images.unsplash.com/photo-1518199266791-5375a83190b7");
+                try {
+                    const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
+                    images = data.i.split(',').filter(u => u !== "");
+                    if (!images.length) images.push("https://images.unsplash.com/photo-1518199266791-5375a83190b7");
 
-                const container = document.getElementById('slideshow-container');
-                images.forEach(url => {
-                    container.innerHTML += `
-                        <div class="slide-wrapper">
-                            <img src="${url}" class="slide-bg-blur">
-                            <div class="image-frame"><img src="${url}" class="slide-img-main"></div>
-                            <div class="message-box">
-                                <h1 class="text-white text-2xl font-bold italic mb-1">${data.n}</h1>
-                                <p class="text-pink-100 text-sm font-light">${data.m}</p>
-                                <p class="text-[8px] text-pink-300 mt-4 uppercase tracking-widest opacity-50">Designed by kofilartey</p>
-                            </div>
-                        </div>`;
-                });
-                document.getElementById('bg-music').src = data.s;
-                if (data.v) {
-                    document.getElementById('voice-audio').src = data.v;
-                    document.getElementById('replay-voice-btn').classList.remove('hidden');
-                }
+                    const container = document.getElementById('slideshow-container');
+                    images.forEach(url => {
+                        container.innerHTML += `
+                            <div class="slide-wrapper">
+                                <img src="${url}" class="slide-bg-blur">
+                                <div class="image-frame"><img src="${url}" class="slide-img-main"></div>
+                                <div class="message-box">
+                                    <h1 class="text-white text-2xl font-bold italic mb-1">${data.n}</h1>
+                                    <p class="text-pink-100 text-sm font-light">${data.m}</p>
+                                    <p class="text-[8px] text-pink-300 mt-4 uppercase tracking-widest opacity-50">Designed by kofilartey</p>
+                                </div>
+                            </div>`;
+                    });
+                    document.getElementById('bg-music').src = data.s;
+                    if (data.v) {
+                        document.getElementById('voice-audio').src = data.v;
+                        document.getElementById('replay-voice-btn').classList.remove('hidden');
+                    }
+                } catch (e) { console.error("Data error"); }
             }
         };
 
@@ -432,26 +490,14 @@
         document.getElementById('click-area').addEventListener('click', function () {
             this.style.display = 'none';
             document.getElementById('hero-page').classList.remove('opacity-0', 'invisible');
-
             const bgMusic = document.getElementById('bg-music');
             const voiceAudio = document.getElementById('voice-audio');
-
             setInterval(spawnHeart, 300);
 
             if (voiceAudio.src && voiceAudio.src !== window.location.href) {
-                try {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const source = audioCtx.createMediaElementSource(voiceAudio);
-                    const gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 2.5;
-                    source.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                } catch (e) { console.log("Audio boost failed"); }
-
                 bgMusic.volume = 0.15;
                 bgMusic.play();
                 voiceAudio.play();
-
                 voiceAudio.onended = () => {
                     let vol = 0.15;
                     let interval = setInterval(() => {
@@ -473,12 +519,6 @@
                 }, 4500);
             }
         });
-
-        function shareWhatsApp() {
-            navigator.clipboard.readText().then(text => {
-                window.open(`https://wa.me/?text=${encodeURIComponent("I have a surprise for you: " + text)}`);
-            });
-        }
     </script>
 </body>
 
