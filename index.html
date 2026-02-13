@@ -14,11 +14,21 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            /* Takes off the scroll bar */
             touch-action: none;
             position: fixed;
             width: 100%;
             background: #000;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            scrollbar-width: none;
+            /* For Firefox */
+            -ms-overflow-style: none;
+            /* For IE and Edge */
+        }
+
+        /* Takes off scroll bar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         #slideshow-container {
@@ -84,6 +94,7 @@
             text-align: center;
             z-index: 30;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
 
         .heart-particle {
@@ -183,12 +194,20 @@
         }
 
         #setup-form::-webkit-scrollbar {
-            width: 4px;
+            display: none;
         }
 
-        #setup-form::-webkit-scrollbar-thumb {
-            background: #fbcfe8;
-            border-radius: 10px;
+        /* Top sticky navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 150;
         }
     </style>
 </head>
@@ -366,13 +385,23 @@
         </div>
 
         <div id="hero-page" class="fixed inset-0 z-50 opacity-0 invisible transition-all duration-1000">
+            <div class="top-nav flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <button onclick="location.reload()"
+                        class="bg-white/20 backdrop-blur-md border border-white/30 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter">Exit
+                        ✕</button>
+                    <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
+                        class="bg-pink-500/80 backdrop-blur-md text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">Make
+                        One 💖</a>
+                </div>
+                <button onclick="toggleCoffeeModal()"
+                    class="bg-white/20 backdrop-blur-md border border-white/30 p-3 rounded-full text-xl shadow-2xl animate-coffee">☕</button>
+            </div>
+
             <div id="slideshow-container"></div>
-            <div id="indicator-container" class="absolute bottom-36 left-0 right-0 z-[110] flex justify-center gap-2">
+            <div id="indicator-container" class="absolute bottom-14 left-0 right-0 z-[110] flex justify-center gap-2">
             </div>
             <div id="heart-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
-
-            <button onclick="toggleCoffeeModal()"
-                class="absolute top-8 right-8 z-[100] bg-white/20 backdrop-blur-xl p-4 rounded-full border border-white/30 text-2xl shadow-2xl animate-coffee">☕</button>
 
             <div id="coffee-modal"
                 class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-md p-6 opacity-0 pointer-events-none transition-all duration-300">
@@ -382,37 +411,25 @@
                     <h3 class="text-2xl font-black text-gray-800 mb-2">Buy Me Coffee</h3>
                     <p class="text-[11px] text-pink-500 mb-6 font-bold leading-relaxed italic">"If you enjoyed this
                         experience, a small support helps me keep the magic alive. Let's be compassionate! ❤️"</p>
-
                     <div onclick="copyMomo()"
                         class="cursor-pointer bg-yellow-400/10 border-2 border-yellow-400/30 py-5 rounded-3xl mb-6 group transition-all active:scale-95">
                         <span id="momo-number" class="block font-black text-2xl text-yellow-700">0531114795</span>
                         <span id="copy-status" class="text-[10px] font-black text-yellow-600 uppercase">Tap to Copy
                             Number</span>
                     </div>
-
                     <a href="https://wa.me/233557655008" target="_blank"
                         class="block bg-[#25D366] text-white py-4 rounded-2xl font-black text-sm uppercase shadow-lg mb-4">Chat
                         with Me</a>
-
                     <button onclick="toggleCoffeeModal()"
                         class="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-pink-500">Maybe
                         Later</button>
-
                     <p class="mt-6 text-[9px] text-gray-300 uppercase font-black">Designed by kofilartey</p>
                 </div>
             </div>
 
-            <div class="absolute bottom-5 left-0 right-0 z-[100] flex flex-col items-center gap-6">
-                <div class="flex gap-4">
-                    <button onclick="location.reload()"
-                        class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter">Exit
-                        ✕</button>
-                    <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
-                        class="bg-pink-500 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">Make
-                        One 💖</a>
-                </div>
+            <div class="absolute bottom-6 left-0 right-0 z-[100] flex flex-col items-center gap-4">
                 <button id="replay-voice-btn" onclick="replayVoice()"
-                    class="hidden bg-white/20 backdrop-blur-xl text-white p-5 rounded-full shadow-2xl border border-white/30 active:scale-90 transition-all">
+                    class="hidden bg-white/20 backdrop-blur-xl text-white p-2 rounded-full shadow-2xl border border-white/30 active:scale-90 transition-all">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                         <path
                             d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
@@ -435,7 +452,6 @@
         let finalGeneratedUrl = "";
         let currentSlide = 0;
 
-        // --- AUDIO PREVIEW ---
         const previewAudio = document.getElementById('preview-audio');
         function togglePreview() {
             const songUrl = document.getElementById('song-select').value;
@@ -445,7 +461,6 @@
         }
         function stopPreview() { previewAudio.pause(); document.getElementById('preview-icon').innerText = "▶️"; }
 
-        // --- FILE HANDLING ---
         async function handleFileUpload(input) {
             for (let file of input.files) {
                 const fd = new FormData();
@@ -492,7 +507,6 @@
             }
         }
 
-        // --- LINK GENERATION ---
         async function generateLink() {
             stopPreview();
             const data = {
@@ -561,7 +575,6 @@
             setTimeout(() => heart.remove(), 4000);
         }
 
-        // --- DISPLAY LOGIC ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('v')) {
