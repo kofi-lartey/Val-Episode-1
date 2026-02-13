@@ -18,7 +18,7 @@
             position: fixed;
             width: 100%;
             background: #000;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         #slideshow-container {
@@ -27,7 +27,7 @@
             display: flex;
             width: 100%;
             height: 100%;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
 
         .slide-wrapper {
@@ -45,15 +45,13 @@
             position: relative;
             z-index: 20;
             width: 85vw;
-            max-width: 400px;
-            max-height: 50vh;
+            max-width: 380px;
             aspect-ratio: 1/1;
             background: white;
-            padding: 8px;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
-            margin-bottom: 20px;
-            overflow: hidden;
+            padding: 10px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            margin-bottom: 25px;
         }
 
         .slide-bg-blur {
@@ -62,50 +60,42 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: blur(30px) brightness(0.4);
+            filter: blur(40px) brightness(0.5);
             z-index: 5;
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .slide-img-main {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 14px;
+            border-radius: 16px;
         }
 
         .message-box {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 24px;
+            padding: 24px;
+            border-radius: 30px;
             width: 90vw;
             max-width: 400px;
             text-align: center;
             z-index: 30;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .heart-particle {
             position: absolute;
-            color: rgba(255, 182, 193, 0.6);
             pointer-events: none;
-            z-index: 10;
-            animation: floatUp 4s linear forwards;
-        }
-
-        .flower-particle {
-            position: absolute;
-            pointer-events: none;
-            z-index: 10;
-            font-size: 24px;
-            animation: fallDown linear forwards;
+            z-index: 15;
+            animation: floatUp 4s ease-out forwards;
         }
 
         @keyframes floatUp {
             0% {
-                transform: translateY(100vh) scale(0);
+                transform: translateY(100vh) scale(0.5);
                 opacity: 0;
             }
 
@@ -114,23 +104,7 @@
             }
 
             100% {
-                transform: translateY(-10vh) scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        @keyframes fallDown {
-            0% {
-                transform: translateY(-10vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(110vh) translateX(100px) rotate(360deg);
+                transform: translateY(-20vh) scale(1.8) rotate(20deg);
                 opacity: 0;
             }
         }
@@ -143,12 +117,30 @@
             }
 
             50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes coffeePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+            }
+
+            50% {
                 transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
             }
         }
 
         .animate-beat {
-            animation: heartBeat 1.4s infinite;
+            animation: heartBeat 1.2s infinite;
+        }
+
+        .animate-coffee {
+            animation: coffeePulse 2s infinite ease-in-out;
         }
 
         .recording-pulse {
@@ -164,153 +156,195 @@
             }
 
             50% {
-                opacity: 0.5;
+                opacity: 0.6;
             }
         }
 
-        #coffee-modal,
-        #qr-modal {
-            transition: all 0.3s ease-in-out;
-            transform: scale(0.9);
-            opacity: 0;
-            pointer-events: none;
-        }
-
         #coffee-modal.active,
-        #qr-modal.active {
+        #qr-modal.active,
+        #link-modal.active {
             transform: scale(1);
             opacity: 1;
             pointer-events: auto;
         }
 
-        #qrcode img {
-            margin: 0 auto;
-            border: 8px solid white;
-            border-radius: 12px;
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .indicator-dot.active {
+            background: #ec4899;
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        #setup-form::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #setup-form::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 10px;
         }
     </style>
 </head>
 
-<body class="bg-pink-50 min-h-[100dvh] flex items-center justify-center select-none text-slate-800">
+<body class="bg-pink-50 flex items-center justify-center select-none">
 
     <div id="setup-form"
-        class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[95dvh] overflow-y-auto m-4">
-        <h1 class="text-2xl font-bold text-pink-600 mb-1 text-center">Val Card Creator 💖</h1>
-        <p class="text-[10px] text-center text-gray-400 mb-4 tracking-widest uppercase">Designed by kofilartey</p>
+        class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[92dvh] overflow-y-auto m-4">
+        <h1 class="text-3xl font-black text-pink-600 mb-1 text-center italic">Val Card Creator 💖</h1>
+        <p class="text-[10px] text-center text-gray-400 mb-6 tracking-widest uppercase font-bold">Designed by kofilartey
+        </p>
 
-        <div class="space-y-4">
-            <input type="text" id="input-name" placeholder="Valentine's Name"
-                class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-pink-300">
-            <textarea id="input-msg" placeholder="Your Romantic Message..."
-                class="w-full p-3 border rounded-xl outline-none h-20 focus:ring-2 focus:ring-pink-300"></textarea>
+        <div class="space-y-5">
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Recipient Name</label>
+                <input type="text" id="input-name" placeholder="Who is this for?"
+                    class="w-full p-4 border-2 border-pink-50 rounded-2xl outline-none focus:border-pink-300 transition-all bg-pink-50/30">
+            </div>
 
-            <div class="border-2 border-dashed border-pink-200 rounded-xl p-4 text-center">
-                <label class="block text-sm font-semibold text-pink-600 mb-2 cursor-pointer">
-                    Upload Photos 📸
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sweet Message</label>
+                <textarea id="input-msg" placeholder="Write something they'll never forget..."
+                    class="w-full p-4 border-2 border-pink-50 rounded-2xl outline-none h-24 focus:border-pink-300 transition-all bg-pink-50/30"></textarea>
+            </div>
+
+            <div class="border-2 border-dashed border-pink-200 rounded-2xl p-5 text-center bg-pink-50/20">
+                <label class="block text-sm font-bold text-pink-600 mb-2 cursor-pointer">
+                    Add Memories 📸
                     <input type="file" id="file-input" multiple accept="image/*" class="hidden"
                         onchange="handleFileUpload(this)">
                 </label>
-                <div id="preview-container" class="flex gap-2 mt-2 overflow-x-auto"></div>
+                <div id="preview-container" class="flex gap-2 mt-2 overflow-x-auto pb-2"></div>
             </div>
 
-            <div class="bg-pink-50 p-4 rounded-xl space-y-3">
-                <label class="block text-xs font-bold text-gray-500 uppercase text-center">Step 1: Background
-                    Song</label>
-                <div class="flex gap-2">
-                    <select id="song-select" onchange="stopPreview()"
-                        class="flex-1 p-3 border rounded-xl outline-none bg-gray-50 focus:ring-2 focus:ring-pink-400 text-sm">
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770898393/Ed_Sheeran_-_Perfect_ro1nmm.mp3">
-                            Ed Sheeran - Perfect</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904553/John_Legend_-_All_of_Me_Official_Video_hiavsf.mp3">
-                            John Legend - All of Me</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770987203/Akwaboah_-_Obiaa_x_Cina_Soul_Official_Music_Video_smlsjk.mp3">
-                            Akwaboah - Obiaa x Cina Soul</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904946/Dadea_Anoma_umghib.mp3">
-                            Kwabena Kwabena - Dadea Anoma</option>
-                        <option value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905062/Meye_ounvt2.mp3">
-                            Kwabena Kwabena - Meye</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985151/Samini_-_My_Own_Lyrics_Video_mcxjre.mp3">
-                            Samini - My Own</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905264/Sean_Kingston_-_Me_Love_Official_Video_mnlorc.mp3">
-                            Sean Kingston - Me Love</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905379/Akon-beautiful_rxitsl.mp3">
-                            Akon - Beautiful</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905491/Chris_Brown_-_With_You_Official_HD_Video_iqxx8x.mp3">
-                            Chris Brown - With You</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905629/P_Square_-_No_One_Like_You_Official_Video_tjwaqr.mp3">
-                            P Square - No One Like You</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905725/Jidenna_-_Bambi_Official_Video_ezkkfj.mp3">
-                            Jidenna - Bambi</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985504/Adina_-_WHY_Official_Video_vtukli.mp3">
-                            Adina - WHY</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985735/Kill_Me_Shy_ughdyk.mp3">
-                            Dr Cryme - Kill Me Shy</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770986132/Sweetio_Club_Mix_feat._Sarkodie_2_q0tvcu.mp3">
-                            Sweetio (feat. Sarkodie)</option>
-                        <option
-                            value="https://res.cloudinary.com/djjgkezui/video/upload/v1770986171/Always_on_My_Mind_feat._Obrafour_gw7y5u.mp3">
-                            Sarkodie (feat. Obrafour)</option>
-                    </select>
-                    <button id="preview-btn" onclick="togglePreview()"
-                        class="bg-pink-500 text-white w-12 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-all">
-                        <span id="preview-icon">▶️</span>
-                    </button>
+            <div class="bg-gray-50 p-5 rounded-2xl space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase text-center mb-3">Background
+                        Soundtrack</label>
+                    <div class="flex gap-2">
+                        <select id="song-select" onchange="stopPreview()"
+                            class="flex-1 p-3 border-none rounded-xl outline-none bg-white shadow-sm text-sm font-medium">
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770898393/Ed_Sheeran_-_Perfect_ro1nmm.mp3">
+                                Ed Sheeran - Perfect</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904553/John_Legend_-_All_of_Me_Official_Video_hiavsf.mp3">
+                                John Legend - All of Me</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770987203/Akwaboah_-_Obiaa_x_Cina_Soul_Official_Music_Video_smlsjk.mp3">
+                                Akwaboah - Obiaa x Cina Soul</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904946/Dadea_Anoma_umghib.mp3">
+                                Kwabena Kwabena - Dadea Anoma</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905062/Meye_ounvt2.mp3">
+                                Kwabena Kwabena - Meye</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985151/Samini_-_My_Own_Lyrics_Video_mcxjre.mp3">
+                                Samini - My Own</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905264/Sean_Kingston_-_Me_Love_Official_Video_mnlorc.mp3">
+                                Sean Kingston - Me Love</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905379/Akon-beautiful_rxitsl.mp3">
+                                Akon - Beautiful</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905491/Chris_Brown_-_With_You_Official_HD_Video_iqxx8x.mp3">
+                                Chris Brown - With You</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905629/P_Square_-_No_One_Like_You_Official_Video_tjwaqr.mp3">
+                                P Square - No One Like You</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905725/Jidenna_-_Bambi_Official_Video_ezkkfj.mp3">
+                                Jidenna - Bambi</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985504/Adina_-_WHY_Official_Video_vtukli.mp3">
+                                Adina - WHY</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770985735/Kill_Me_Shy_ughdyk.mp3">
+                                Dr Cryme - Kill Me Shy</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770986132/Sweetio_Club_Mix_feat._Sarkodie_2_q0tvcu.mp3">
+                                Sweetio (feat. Sarkodie)</option>
+                            <option
+                                value="https://res.cloudinary.com/djjgkezui/video/upload/v1770986171/Always_on_My_Mind_feat._Obrafour_gw7y5u.mp3">
+                                Sarkodie (feat. Obrafour)</option>
+                        </select>
+                        <button onclick="togglePreview()"
+                            class="bg-pink-500 text-white w-12 rounded-xl flex items-center justify-center shadow-md active:scale-90 transition-all">
+                            <span id="preview-icon">▶️</span>
+                        </button>
+                    </div>
                 </div>
 
-                <label class="block text-xs font-bold text-gray-500 uppercase text-center mt-2">Step 2: Voice Over
-                    (Optional)</label>
-                <div class="flex gap-2">
-                    <button id="record-btn" onclick="toggleRecording()"
-                        class="flex-1 bg-gray-800 text-white py-2 rounded-lg text-[10px] font-bold uppercase">Record
-                        Voice 🎙️</button>
-                    <label
-                        class="flex-1 text-center cursor-pointer bg-white border border-pink-300 py-2 rounded-lg text-[10px] text-pink-600 font-bold uppercase">
-                        Upload MP3
-                        <input type="file" id="audio-input" accept="audio/*" class="hidden"
-                            onchange="handleAudioUpload(this)">
-                    </label>
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase text-center mb-3">Personal Voice
+                        Over (Optional)</label>
+                    <div class="flex gap-2">
+                        <button id="record-btn" onclick="toggleRecording()"
+                            class="flex-1 bg-gray-800 text-white py-3 rounded-xl text-[10px] font-bold uppercase transition-all">Record
+                            Voice 🎙️</button>
+                        <label
+                            class="flex-1 text-center cursor-pointer bg-white border border-pink-200 py-3 rounded-xl text-[10px] text-pink-600 font-bold uppercase shadow-sm">
+                            Upload MP3
+                            <input type="file" id="audio-input" accept="audio/*" class="hidden"
+                                onchange="handleAudioUpload(this)">
+                        </label>
+                    </div>
+                    <div id="audio-status" class="text-[10px] text-center text-pink-500 font-bold mt-2 h-4 italic">
+                    </div>
                 </div>
-                <div id="audio-status" class="text-[10px] text-center text-pink-500 font-medium h-4 italic"></div>
+            </div>
+
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Link Alias (TinyURL)</label>
+                <div
+                    class="flex items-center bg-gray-50 rounded-xl px-4 py-1 mt-1 border-2 border-transparent focus-within:border-pink-200 transition-all">
+                    <span class="text-gray-400 text-xs">tinyurl.com/</span>
+                    <input type="text" id="custom-alias" placeholder="my-love-2026"
+                        class="bg-transparent outline-none p-2 text-sm w-full font-bold text-pink-600">
+                </div>
             </div>
 
             <button onclick="generateLink()"
-                class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-pink-600 transition-all">Create
-                Card Link 🔗</button>
+                class="w-full bg-pink-500 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-pink-600 active:scale-[0.98] transition-all uppercase tracking-widest">Create
+                Surprise 🎁</button>
+        </div>
+    </div>
 
-            <div id="share-buttons" class="hidden space-y-3 mt-2">
-                <button onclick="shareWhatsApp()"
-                    class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">Share
-                    to WhatsApp</button>
+    <div id="link-modal"
+        class="fixed inset-0 z-[500] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white p-8 rounded-3xl text-center max-w-sm w-full shadow-2xl">
+            <h3 class="font-black text-2xl text-pink-600 mb-2">It's Ready! ✨</h3>
+            <p id="shorten-status-text" class="text-[11px] text-gray-400 mb-6 font-medium italic">Your magic link is
+                generated</p>
+            <input type="text" id="final-link-input" readonly
+                class="w-full p-4 bg-pink-50 rounded-2xl text-xs border-none mb-6 text-pink-600 font-bold text-center">
+            <div class="flex flex-col gap-3">
+                <button onclick="copyManualLink()" class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl">Copy
+                    Magic Link</button>
+                <button onclick="shareWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl">Send
+                    on WhatsApp</button>
                 <button onclick="toggleQRModal()"
-                    class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2">Get
-                    QR Code 📸</button>
+                    class="w-full text-gray-400 font-bold py-2 text-xs uppercase tracking-widest">Show QR Code</button>
             </div>
         </div>
     </div>
 
-    <div id="qr-modal" class="fixed inset-0 z-[500] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
-        onclick="toggleQRModal()">
-        <div class="bg-white p-6 rounded-3xl text-center max-w-xs w-full shadow-2xl" onclick="event.stopPropagation()">
-            <h3 class="font-bold text-gray-800 mb-4">Your QR Code ❤️</h3>
-            <div id="qrcode" class="flex justify-center mb-6" style="min-height: 180px;"></div>
-            <div class="flex flex-col gap-2">
-                <button onclick="downloadQR()"
-                    class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl text-xs">Save QR to Device</button>
-                <button onclick="toggleQRModal()" class="w-full text-gray-400 font-bold py-2 text-xs">Close</button>
-            </div>
+    <div id="qr-modal"
+        class="fixed inset-0 z-[600] flex items-center justify-center bg-black/95 backdrop-blur-md p-6 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white p-8 rounded-3xl text-center max-w-xs w-full shadow-2xl">
+            <h3 class="font-black text-gray-800 mb-6">Scan for Love 💓</h3>
+            <div id="qrcode" class="flex justify-center mb-8"></div>
+            <button onclick="downloadQR()" class="w-full bg-pink-500 text-white font-bold py-4 rounded-xl mb-4">Save to
+                Gallery</button>
+            <button onclick="toggleQRModal()" class="w-full text-gray-400 font-bold text-xs uppercase">Close</button>
         </div>
     </div>
 
@@ -319,57 +353,72 @@
         <audio id="voice-audio" crossorigin="anonymous"></audio>
         <audio id="preview-audio"></audio>
 
-        <div id="click-area" class="flex flex-col items-center justify-center cursor-pointer text-center z-[400]">
-            <svg viewBox="0 0 24 24" class="w-56 h-56 fill-pink-500 stroke-white stroke-1 animate-beat">
-                <path
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-            <h2 class="text-pink-600 font-black mt-6 text-2xl animate-bounce">Tap to Open 💖</h2>
-            <p class="text-pink-400 text-[10px] mt-4 uppercase tracking-[0.2em]">Designed by kofilartey</p>
+        <div id="click-area"
+            class="fixed inset-0 flex flex-col items-center justify-center cursor-pointer z-[400] bg-black/20 backdrop-blur-md">
+            <div class="animate-beat">
+                <svg viewBox="0 0 24 24" class="w-48 h-48 fill-pink-500 drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]">
+                    <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+            </div>
+            <h2 class="text-white font-black mt-8 text-3xl italic animate-pulse">Open Your Surprise...</h2>
+            <p class="text-white/50 text-[10px] mt-4 uppercase tracking-[0.3em] font-bold">Designed by kofilartey</p>
         </div>
 
-        <div id="hero-page" class="fixed inset-0 z-50 opacity-0 invisible transition-opacity duration-1000">
+        <div id="hero-page" class="fixed inset-0 z-50 opacity-0 invisible transition-all duration-1000">
             <div id="slideshow-container"></div>
-            <div id="heart-container" class="absolute inset-0 pointer-events-none"></div>
+            <div id="indicator-container" class="absolute bottom-36 left-0 right-0 z-[110] flex justify-center gap-2">
+            </div>
+            <div id="heart-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
             <button onclick="toggleCoffeeModal()"
-                class="absolute top-6 right-6 z-[100] bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 shadow-lg">☕</button>
+                class="absolute top-8 right-8 z-[100] bg-white/20 backdrop-blur-xl p-4 rounded-full border border-white/30 text-2xl shadow-2xl animate-coffee">☕</button>
 
             <div id="coffee-modal"
-                class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
-                <div class="bg-white rounded-3xl p-8 max-w-xs w-full text-center shadow-2xl relative">
-                    <button onclick="toggleCoffeeModal()"
-                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Support the Creator</h3>
-                    <p class="text-xs text-gray-500 mb-4 px-2">If this made your day, you can support my work via MTN
-                        Momo:</p>
+                class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-md p-6 opacity-0 pointer-events-none transition-all duration-300">
+                <div
+                    class="bg-white rounded-[40px] p-10 max-w-xs w-full text-center shadow-2xl border-4 border-pink-100">
+                    <div class="text-4xl mb-4">☕</div>
+                    <h3 class="text-2xl font-black text-gray-800 mb-2">Buy Me Coffee</h3>
+                    <p class="text-[11px] text-pink-500 mb-6 font-bold leading-relaxed italic">"If you enjoyed this
+                        experience, a small support helps me keep the magic alive. Let's be compassionate! ❤️"</p>
+
                     <div onclick="copyMomo()"
-                        class="cursor-pointer bg-yellow-50 border-2 border-yellow-200 py-3 rounded-2xl font-mono text-lg font-bold text-yellow-700 mb-6 flex flex-col items-center">
-                        <span id="momo-number">0531114795</span>
-                        <span id="copy-status" class="text-[9px] text-yellow-600 uppercase mt-1">Click to copy</span>
+                        class="cursor-pointer bg-yellow-400/10 border-2 border-yellow-400/30 py-5 rounded-3xl mb-6 group transition-all active:scale-95">
+                        <span id="momo-number" class="block font-black text-2xl text-yellow-700">0531114795</span>
+                        <span id="copy-status" class="text-[10px] font-black text-yellow-600 uppercase">Tap to Copy
+                            Number</span>
                     </div>
+
                     <a href="https://wa.me/233557655008" target="_blank"
-                        class="flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-2xl font-bold text-sm">Chat
-                        with me</a>
+                        class="block bg-[#25D366] text-white py-4 rounded-2xl font-black text-sm uppercase shadow-lg mb-4">Chat
+                        with Me</a>
+
+                    <button onclick="toggleCoffeeModal()"
+                        class="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-pink-500">Maybe
+                        Later</button>
+
+                    <p class="mt-6 text-[9px] text-gray-300 uppercase font-black">Designed by kofilartey</p>
                 </div>
             </div>
 
-            <div class="absolute bottom-10 left-0 right-0 z-[100] flex flex-col items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <button onclick="location.reload()"
-                        class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase">Close
-                        ✕</button>
-                    <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
-                        class="bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-2.5 rounded-full text-[10px] font-bold uppercase shadow-xl">Create
-                        Yours 💖</a>
-                </div>
+            <div class="absolute bottom-10 left-0 right-0 z-[100] flex flex-col items-center gap-6">
                 <button id="replay-voice-btn" onclick="replayVoice()"
-                    class="hidden bg-pink-500/80 backdrop-blur-sm text-white p-3 rounded-full shadow-lg">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    class="hidden bg-white/20 backdrop-blur-xl text-white p-5 rounded-full shadow-2xl border border-white/30 active:scale-90 transition-all">
+                    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
                         <path
                             d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
                     </svg>
                 </button>
+                <div class="flex gap-4">
+                    <button onclick="location.reload()"
+                        class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter">Exit
+                        ✕</button>
+                    <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
+                        class="bg-pink-500 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">Make
+                        One 💖</a>
+                </div>
+                <p class="text-white/40 text-[9px] uppercase font-bold tracking-[0.2em]">Designed by kofilartey</p>
             </div>
         </div>
     </div>
@@ -377,7 +426,6 @@
     <script>
         const CLOUD_NAME = "djjgkezui";
         const UPLOAD_PRESET = "ml_default";
-
         let uploadedImageUrls = [];
         let customVoiceUrl = null;
         let images = [];
@@ -385,158 +433,139 @@
         let mediaRecorder;
         let audioChunks = [];
         let finalGeneratedUrl = "";
+        let currentSlide = 0;
 
-        // --- MOMO COPY ---
-        function copyMomo() {
-            const num = document.getElementById('momo-number').innerText;
-            const status = document.getElementById('copy-status');
-            navigator.clipboard.writeText(num).then(() => {
-                status.innerText = "Copied! ✅";
-                setTimeout(() => status.innerText = "Click to copy", 2000);
-            });
-        }
-
-        // --- PREVIEW AUDIO ---
+        // --- AUDIO PREVIEW ---
         const previewAudio = document.getElementById('preview-audio');
-        const previewBtnIcon = document.getElementById('preview-icon');
-
         function togglePreview() {
             const songUrl = document.getElementById('song-select').value;
             if (previewAudio.src !== songUrl) previewAudio.src = songUrl;
-            if (previewAudio.paused) { previewAudio.play(); previewBtnIcon.innerText = "⏹️"; }
-            else { previewAudio.pause(); previewBtnIcon.innerText = "▶️"; }
+            if (previewAudio.paused) { previewAudio.play(); document.getElementById('preview-icon').innerText = "⏹️"; }
+            else { previewAudio.pause(); document.getElementById('preview-icon').innerText = "▶️"; }
         }
+        function stopPreview() { previewAudio.pause(); document.getElementById('preview-icon').innerText = "▶️"; }
 
-        function stopPreview() {
-            previewAudio.pause();
-            previewAudio.currentTime = 0;
-            previewBtnIcon.innerText = "▶️";
-        }
-        previewAudio.onended = stopPreview;
-
-        // --- UI ANIMATIONS ---
-        function spawnHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.className = 'heart-particle';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            document.getElementById('heart-container').appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }
-
-        function spawnFlower() {
-            const flowers = ['🌸', '🌹', '🌷', '🌺', '🥀'];
-            const flower = document.createElement('div');
-            flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
-            flower.className = 'flower-particle';
-            flower.style.left = Math.random() * 100 + 'vw';
-            flower.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            document.getElementById('heart-container').appendChild(flower);
-            setTimeout(() => flower.remove(), 7000);
-        }
-
-        // --- UPLOAD LOGIC ---
+        // --- FILE HANDLING ---
         async function handleFileUpload(input) {
             for (let file of input.files) {
                 const fd = new FormData();
                 fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET);
-                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
-                const data = await res.json();
-                if (data.secure_url) {
-                    uploadedImageUrls.push(data.secure_url);
-                    document.getElementById('preview-container').innerHTML += `<img src="${data.secure_url}" class="w-10 h-10 object-cover rounded-lg border-2 border-pink-200">`;
-                }
-            }
-        }
-
-        async function toggleRecording() {
-            const btn = document.getElementById('record-btn');
-            if (!isRecording) {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                    mediaRecorder.onstop = () => uploadAudio(new Blob(audioChunks, { type: 'audio/mp3' }));
-                    mediaRecorder.start();
-                    isRecording = true;
-                    btn.innerText = "Stop & Save ⏹️";
-                    btn.classList.add('recording-pulse');
-                } catch (e) { alert("Microphone access denied."); }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                btn.innerText = "Record Voice 🎙️";
-                btn.classList.remove('recording-pulse');
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+                    const data = await res.json();
+                    if (data.secure_url) {
+                        uploadedImageUrls.push(data.secure_url);
+                        document.getElementById('preview-container').innerHTML += `<img src="${data.secure_url}" class="w-12 h-12 object-cover rounded-xl border-2 border-pink-200">`;
+                    }
+                } catch (e) { console.error("Upload failed", e); }
             }
         }
 
         async function handleAudioUpload(input) { if (input.files[0]) uploadAudio(input.files[0]); }
 
         async function uploadAudio(file) {
-            document.getElementById('audio-status').innerText = "Processing Voice... ⏳";
+            document.getElementById('audio-status').innerText = "Polishing Voice... 🎙️";
             const fd = new FormData();
             fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET); fd.append('resource_type', 'video');
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, { method: 'POST', body: fd });
-            const data = await res.json();
-            if (data.secure_url) {
-                customVoiceUrl = data.secure_url;
-                document.getElementById('audio-status').innerText = "Voice Ready! ✅";
+            try {
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.secure_url) {
+                    customVoiceUrl = data.secure_url;
+                    document.getElementById('audio-status').innerText = "Voice Ready! ✅";
+                }
+            } catch (e) { document.getElementById('audio-status').innerText = "Upload failed ❌"; }
+        }
+
+        async function toggleRecording() {
+            const btn = document.getElementById('record-btn');
+            if (!isRecording) {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => uploadAudio(new Blob(audioChunks, { type: 'audio/mp3' }));
+                mediaRecorder.start();
+                isRecording = true; btn.innerText = "Listening... ⏹️"; btn.classList.add('recording-pulse');
+            } else {
+                mediaRecorder.stop(); isRecording = false; btn.innerText = "Record Voice 🎙️"; btn.classList.remove('recording-pulse');
             }
         }
 
-        // --- GENERATION & SHARING ---
-        function toggleCoffeeModal() { document.getElementById('coffee-modal').classList.toggle('active'); }
-        function toggleQRModal() { document.getElementById('qr-modal').classList.toggle('active'); }
-
-        function generateLink() {
+        // --- LINK GENERATION ---
+        async function generateLink() {
             stopPreview();
             const data = {
                 n: document.getElementById('input-name').value || "My Love",
-                m: document.getElementById('input-msg').value || "Happy Valentine's Day!",
+                m: document.getElementById('input-msg').value || "You're the best part of my day. Happy Valentine's Day!",
                 s: document.getElementById('song-select').value,
                 v: customVoiceUrl,
                 i: uploadedImageUrls.join(',')
             };
             const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
-            finalGeneratedUrl = window.location.origin + window.location.pathname + '?v=' + encoded;
+            let baseUrl = window.location.origin + window.location.pathname;
+            finalGeneratedUrl = baseUrl + '?v=' + encoded;
+
+            document.getElementById('final-link-input').value = finalGeneratedUrl;
+            document.getElementById('link-modal').classList.add('active');
+
+            const alias = document.getElementById('custom-alias').value.trim().replace(/\s+/g, '-');
+            try {
+                let apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(finalGeneratedUrl)}`;
+                if (alias) apiUrl += `&alias=${encodeURIComponent(alias)}`;
+                const response = await fetch(apiUrl);
+                const shortUrl = await response.text();
+                if (shortUrl.includes("http")) {
+                    finalGeneratedUrl = shortUrl;
+                    document.getElementById('final-link-input').value = shortUrl;
+                    document.getElementById('shorten-status-text').innerText = "Short link ready! ✅";
+                }
+            } catch (e) {
+                document.getElementById('shorten-status-text').innerText = "Long link generated (TinyURL busy)";
+            }
 
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
-
-            // FIX: Open modal first so container is visible for the QR library
-            document.getElementById('qr-modal').classList.add('active');
-
-            setTimeout(() => {
-                new QRCode(qrContainer, { text: finalGeneratedUrl, width: 180, height: 180 });
-            }, 150);
-
-            navigator.clipboard.writeText(finalGeneratedUrl);
-            document.getElementById('share-buttons').classList.remove('hidden');
-            alert("Card Created & Link Copied!");
+            new QRCode(qrContainer, { text: finalGeneratedUrl, width: 200, height: 200, colorDark: "#db2777", colorLight: "#ffffff" });
         }
 
+        function copyManualLink() { navigator.clipboard.writeText(document.getElementById('final-link-input').value); alert("Link Copied to clipboard! 💖"); }
+        function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Hey, I made something special for you! Check it out here: " + finalGeneratedUrl)}`); }
+        function toggleQRModal() { document.getElementById('qr-modal').classList.toggle('active'); }
+        function toggleCoffeeModal() { document.getElementById('coffee-modal').classList.toggle('active'); }
+        function copyMomo() {
+            navigator.clipboard.writeText("0531114795");
+            document.getElementById('copy-status').innerText = "COPIED SUCCESSFULLY! ✅";
+            setTimeout(() => document.getElementById('copy-status').innerText = "Tap to Copy Number", 2000);
+        }
         function downloadQR() {
             const img = document.querySelector("#qrcode img");
             if (img) { const link = document.createElement("a"); link.href = img.src; link.download = "valentine-qr.png"; link.click(); }
         }
 
-        function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Surprise for you: " + finalGeneratedUrl)}`); }
-
         function replayVoice() {
             const voice = document.getElementById('voice-audio');
             const bg = document.getElementById('bg-music');
             bg.volume = 0.15; voice.currentTime = 0; voice.play();
-            voice.onended = () => { bg.volume = 1.0; };
+            voice.onended = () => bg.volume = 1.0;
         }
 
-        // --- WINDOW LOAD ---
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = ['❤️', '💖', '💝', '🌸'][Math.floor(Math.random() * 4)];
+            heart.className = 'heart-particle';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.getElementById('heart-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        // --- DISPLAY LOGIC ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('v')) {
-                document.getElementById('setup-form').classList.add('hidden');
+                document.getElementById('setup-form').style.display = 'none';
                 document.getElementById('card-display').classList.remove('hidden');
                 try {
                     const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
@@ -544,24 +573,27 @@
                     if (!images.length) images.push("https://images.unsplash.com/photo-1518199266791-5375a83190b7");
 
                     const container = document.getElementById('slideshow-container');
-                    images.forEach(url => {
+                    const indicator = document.getElementById('indicator-container');
+
+                    images.forEach((url, idx) => {
                         container.innerHTML += `
                             <div class="slide-wrapper">
                                 <img src="${url}" class="slide-bg-blur">
                                 <div class="image-frame"><img src="${url}" class="slide-img-main"></div>
                                 <div class="message-box">
-                                    <h1 class="text-white text-2xl font-bold italic mb-1">${data.n}</h1>
-                                    <p class="text-pink-100 text-sm font-light mb-4">${data.m}</p>
-                                    <p class="text-[9px] text-white/40 uppercase tracking-[0.2em] border-t border-white/10 pt-3">Designed by kofilartey</p>
+                                    <h1 class="text-white text-3xl font-black italic mb-2 drop-shadow-md">${data.n}</h1>
+                                    <p class="text-pink-50 text-base font-medium leading-relaxed">${data.m}</p>
                                 </div>
                             </div>`;
+                        if (images.length > 1) indicator.innerHTML += `<div class="indicator-dot ${idx === 0 ? 'active' : ''}"></div>`;
                     });
+
                     document.getElementById('bg-music').src = data.s;
-                    if (data.v) {
+                    if (data.v && data.v !== "" && !data.v.includes('null')) {
                         document.getElementById('voice-audio').src = data.v;
                         document.getElementById('replay-voice-btn').classList.remove('hidden');
                     }
-                } catch (e) { console.error("Data error"); }
+                } catch (e) { console.error("Data error", e); }
             }
         };
 
@@ -570,18 +602,23 @@
             document.getElementById('hero-page').classList.remove('opacity-0', 'invisible');
             const bgMusic = document.getElementById('bg-music');
             const voiceAudio = document.getElementById('voice-audio');
-            setInterval(spawnHeart, 300);
-            setInterval(spawnFlower, 600);
-            const hasVoice = voiceAudio.src && voiceAudio.src !== window.location.href && voiceAudio.src !== "";
-            if (hasVoice) {
-                bgMusic.volume = 0.15; bgMusic.play(); voiceAudio.play();
-                voiceAudio.onended = () => { bgMusic.volume = 1.0; };
-            } else { bgMusic.volume = 1; bgMusic.play(); }
+
+            setInterval(spawnHeart, 350);
+            bgMusic.play();
+
+            if (voiceAudio.src && voiceAudio.src !== "" && !voiceAudio.src.includes('null')) {
+                bgMusic.volume = 0.15;
+                setTimeout(() => {
+                    voiceAudio.play();
+                    voiceAudio.onended = () => bgMusic.volume = 1.0;
+                }, 1000);
+            }
+
             if (images.length > 1) {
-                let current = 0;
                 setInterval(() => {
-                    current = (current + 1) % images.length;
-                    document.getElementById('slideshow-container').style.transform = `translateX(-${current * 100}%)`;
+                    currentSlide = (currentSlide + 1) % images.length;
+                    document.getElementById('slideshow-container').style.transform = `translateX(-${currentSlide * 100}%)`;
+                    document.querySelectorAll('.indicator-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
                 }, 4500);
             }
         });
