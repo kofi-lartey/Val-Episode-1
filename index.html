@@ -19,12 +19,6 @@
             width: 100%;
             background: #000;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        ::-webkit-scrollbar {
-            display: none;
         }
 
         #slideshow-container {
@@ -90,7 +84,6 @@
             text-align: center;
             z-index: 30;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
         }
 
         .heart-particle {
@@ -98,20 +91,6 @@
             pointer-events: none;
             z-index: 15;
             animation: floatUp 4s ease-out forwards;
-        }
-
-        .floating-emoji {
-            position: absolute;
-            top: -50px;
-            animation: fall linear infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
         }
 
         @keyframes floatUp {
@@ -203,26 +182,21 @@
             border-radius: 10px;
         }
 
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 150;
+        #setup-form::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #setup-form::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body class="bg-pink-50 flex items-center justify-center select-none">
 
-    <div id="snow-layer" class="fixed inset-0 pointer-events-none z-0"></div>
-
     <div id="setup-form"
-        class="bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[92dvh] overflow-y-auto m-4 border border-pink-100">
+        class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md z-[300] max-h-[92dvh] overflow-y-auto m-4">
         <h1 class="text-3xl font-black text-pink-600 mb-1 text-center italic">Val Card Creator 💖</h1>
         <p class="text-[10px] text-center text-gray-400 mb-6 tracking-widest uppercase font-bold">Designed by kofilartey
         </p>
@@ -242,7 +216,7 @@
 
             <div class="border-2 border-dashed border-pink-200 rounded-2xl p-5 text-center bg-pink-50/20">
                 <label class="block text-sm font-bold text-pink-600 mb-2 cursor-pointer">
-                    Add Memories 📸
+                    Add Memories (Up to 30) 📸
                     <input type="file" id="file-input" multiple accept="image/*" class="hidden"
                         onchange="handleFileUpload(this)">
                 </label>
@@ -267,7 +241,7 @@
                                 Akwaboah - Obiaa x Cina Soul</option>
                             <option
                                 value="https://res.cloudinary.com/djjgkezui/video/upload/v1770904946/Dadea_Anoma_umghib.mp3">
-                                Kwabena Kwabena - Dadea Anoma</option>
+                                Kwabena Kwabena - Datea Anoma</option>
                             <option
                                 value="https://res.cloudinary.com/djjgkezui/video/upload/v1770905062/Meye_ounvt2.mp3">
                                 Kwabena Kwabena - Meye</option>
@@ -329,7 +303,7 @@
             </div>
 
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Link Alias (TinyURL)</label>
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Custom Alias (TinyURL)</label>
                 <div
                     class="flex items-center bg-gray-50 rounded-xl px-4 py-1 mt-1 border-2 border-transparent focus-within:border-pink-200 transition-all">
                     <span class="text-gray-400 text-xs">tinyurl.com/</span>
@@ -375,9 +349,9 @@
     </div>
 
     <div id="card-display" class="hidden flex flex-col items-center justify-center w-full h-[100dvh]">
-        <audio id="bg-music" loop preload="auto" playsinline></audio>
-        <audio id="voice-audio" crossorigin="anonymous" preload="auto" playsinline></audio>
-        <audio id="preview-audio" playsinline></audio>
+        <audio id="bg-music" loop></audio>
+        <audio id="voice-audio" crossorigin="anonymous"></audio>
+        <audio id="preview-audio"></audio>
 
         <div id="click-area"
             class="fixed inset-0 flex flex-col items-center justify-center cursor-pointer z-[400] bg-black/20 backdrop-blur-md">
@@ -392,23 +366,13 @@
         </div>
 
         <div id="hero-page" class="fixed inset-0 z-50 opacity-0 invisible transition-all duration-1000">
-            <div class="top-nav flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button onclick="location.reload()"
-                        class="bg-white/20 backdrop-blur-md border border-white/30 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter">Exit
-                        ✕</button>
-                    <a href="#" onclick="location.reload()"
-                        class="bg-pink-500/80 backdrop-blur-md text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">Make
-                        One 💖</a>
-                </div>
-                <button onclick="toggleCoffeeModal()"
-                    class="bg-white/20 backdrop-blur-md border border-white/30 p-3 rounded-full text-xl shadow-2xl animate-coffee">☕</button>
-            </div>
-
             <div id="slideshow-container"></div>
-            <div id="indicator-container" class="absolute bottom-14 left-0 right-0 z-[110] flex justify-center gap-2">
+            <div id="indicator-container" class="absolute bottom-36 left-0 right-0 z-[110] flex justify-center gap-2">
             </div>
             <div id="heart-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+            <button onclick="toggleCoffeeModal()"
+                class="absolute top-8 right-8 z-[100] bg-white/20 backdrop-blur-xl p-4 rounded-full border border-white/30 text-2xl shadow-2xl animate-coffee">☕</button>
 
             <div id="coffee-modal"
                 class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-md p-6 opacity-0 pointer-events-none transition-all duration-300">
@@ -417,17 +381,44 @@
                     <div class="text-4xl mb-4">☕</div>
                     <h3 class="text-2xl font-black text-gray-800 mb-2">Buy Me Coffee</h3>
                     <p class="text-[11px] text-pink-500 mb-6 font-bold leading-relaxed italic">"If you enjoyed this
-                        experience, a small support helps me keep the magic alive."</p>
+                        experience, a small support helps me keep the magic alive. Let's be compassionate! ❤️"</p>
+
                     <div onclick="copyMomo()"
                         class="cursor-pointer bg-yellow-400/10 border-2 border-yellow-400/30 py-5 rounded-3xl mb-6 group transition-all active:scale-95">
                         <span id="momo-number" class="block font-black text-2xl text-yellow-700">0531114795</span>
                         <span id="copy-status" class="text-[10px] font-black text-yellow-600 uppercase">Tap to Copy
                             Number</span>
                     </div>
+
+                    <a href="https://wa.me/233557655008" target="_blank"
+                        class="block bg-[#25D366] text-white py-4 rounded-2xl font-black text-sm uppercase shadow-lg mb-4">Chat
+                        with Me</a>
+
                     <button onclick="toggleCoffeeModal()"
                         class="text-gray-400 text-[10px] font-bold uppercase tracking-widest hover:text-pink-500">Maybe
                         Later</button>
+
+                    <p class="mt-6 text-[9px] text-gray-300 uppercase font-black">Designed by kofilartey</p>
                 </div>
+            </div>
+            <div class="absolute top-8 left-8 z-[100] flex gap-4">
+                <button onclick="location.reload()"
+                    class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter">Exit
+                    ✕</button>
+                <a href="https://wonderful-bubblegum-bdd48e.netlify.app/" target="_blank"
+                    class="bg-pink-500 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">Make
+                    One 💖</a>
+            </div>
+
+            <div class="absolute bottom-10 left-0 right-0 z-[100] flex flex-col items-center gap-6">
+                <button id="replay-voice-btn" onclick="replayVoice()"
+                    class="hidden bg-white/20 backdrop-blur-xl text-white p-5 rounded-full shadow-2xl border border-white/30 active:scale-90 transition-all">
+                    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                    </svg>
+                </button>
+                <p class="text-white/40 text-[9px] uppercase font-bold tracking-[0.2em]">Designed by kofilartey</p>
             </div>
         </div>
     </div>
@@ -435,9 +426,6 @@
     <script>
         const CLOUD_NAME = "djjgkezui";
         const UPLOAD_PRESET = "ml_default";
-        // --- 1. PASTE YOUR TINYURL API KEY HERE ---
-        const TINYURL_API_KEY = 'kCKZ54NcGU6xktFXiEKg4qp5oYOsDYWpvAGAEQmMtzo1W2WUfRoEJf8LSGF6';
-
         let uploadedImageUrls = [];
         let customVoiceUrl = null;
         let images = [];
@@ -446,23 +434,8 @@
         let audioChunks = [];
         let finalGeneratedUrl = "";
         let currentSlide = 0;
-        let activeStream = null;
 
-        function createSnow() {
-            const container = document.getElementById('snow-layer');
-            const emojis = ['❤️', '💖', '❄️', '🌸', '✨'];
-            const span = document.createElement('span');
-            span.className = 'floating-emoji';
-            span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            span.style.left = Math.random() * 100 + 'vw';
-            span.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            span.style.opacity = Math.random();
-            span.style.fontSize = (Math.random() * 10 + 10) + 'px';
-            container.appendChild(span);
-            setTimeout(() => span.remove(), 5000);
-        }
-        setInterval(createSnow, 300);
-
+        // --- AUDIO PREVIEW ---
         const previewAudio = document.getElementById('preview-audio');
         function togglePreview() {
             const songUrl = document.getElementById('song-select').value;
@@ -472,8 +445,11 @@
         }
         function stopPreview() { previewAudio.pause(); document.getElementById('preview-icon').innerText = "▶️"; }
 
+        // --- FILE HANDLING ---
         async function handleFileUpload(input) {
-            for (let file of input.files) {
+            const files = Array.from(input.files).slice(0, 30);
+            for (let file of files) {
+                if (uploadedImageUrls.length >= 30) break;
                 const fd = new FormData();
                 fd.append('file', file); fd.append('upload_preset', UPLOAD_PRESET);
                 try {
@@ -506,26 +482,23 @@
         async function toggleRecording() {
             const btn = document.getElementById('record-btn');
             if (!isRecording) {
-                try {
-                    activeStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    const mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : 'audio/webm';
-                    mediaRecorder = new MediaRecorder(activeStream, { mimeType });
-                    audioChunks = [];
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                    mediaRecorder.onstop = () => {
-                        uploadAudio(new Blob(audioChunks, { type: mimeType }));
-                        if (activeStream) activeStream.getTracks().forEach(track => track.stop());
-                    };
-                    mediaRecorder.start();
-                    isRecording = true; btn.innerText = "Listening... ⏹️"; btn.classList.add('recording-pulse');
-                } catch (err) { alert("Microphone access denied."); }
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => uploadAudio(new Blob(audioChunks, { type: 'audio/mp3' }));
+                mediaRecorder.start();
+                isRecording = true; btn.innerText = "Listening... ⏹️"; btn.classList.add('recording-pulse');
             } else {
                 mediaRecorder.stop(); isRecording = false; btn.innerText = "Record Voice 🎙️"; btn.classList.remove('recording-pulse');
             }
         }
 
+        // --- LINK GENERATION (TinyURL API Integration with Auto-Unique Alias) ---
         async function generateLink() {
             stopPreview();
+            document.getElementById('shorten-status-text').innerText = "Generating magical link... ⏳";
+
             const data = {
                 n: document.getElementById('input-name').value || "My Love",
                 m: document.getElementById('input-msg').value || "You're the best part of my day. Happy Valentine's Day!",
@@ -533,34 +506,50 @@
                 v: customVoiceUrl,
                 i: uploadedImageUrls.join(',')
             };
+
             const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
             let baseUrl = window.location.origin + window.location.pathname;
-            finalGeneratedUrl = baseUrl + '?v=' + encoded;
+            const fullUrl = baseUrl + '?v=' + encoded;
 
-            document.getElementById('final-link-input').value = finalGeneratedUrl;
-            document.getElementById('link-modal').classList.add('active');
+            // Generate Unique Alias logic
+            let userAlias = document.getElementById('custom-alias').value.trim().replace(/\s+/g, '-');
+            const randomSuffix = Math.random().toString(36).substring(2, 5); // 3-char random string
+            const finalAlias = userAlias ? `${userAlias}-${randomSuffix}` : undefined;
 
-            const alias = document.getElementById('custom-alias').value.trim().replace(/\s+/g, '-');
+            // PLACE YOUR TINYURL API KEY HERE
+            const TINYURL_API_KEY = 'kCKZ54NcGU6xktFXiEKg4qp5oYOsDYWpvAGAEQmMtzo1W2WUfRoEJf8LSGF6';
 
             try {
-                document.getElementById('shorten-status-text').innerText = "Shortening link... ⏳";
                 const response = await fetch('https://api.tinyurl.com/create', {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${TINYURL_API_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: finalGeneratedUrl, alias: alias || undefined, domain: "tinyurl.com" })
+                    headers: {
+                        'Authorization': `Bearer ${TINYURL_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: fullUrl,
+                        alias: finalAlias,
+                        domain: "tinyurl.com"
+                    })
                 });
+
                 const result = await response.json();
-                if (response.ok && result.data && result.data.tiny_url) {
+
+                if (result.data && result.data.tiny_url) {
                     finalGeneratedUrl = result.data.tiny_url;
-                    document.getElementById('final-link-input').value = finalGeneratedUrl;
                     document.getElementById('shorten-status-text').innerText = "Short link ready! ✅";
                 } else {
-                    throw new Error("API Failure");
+                    throw new Error('Shortening failed');
                 }
             } catch (e) {
-                console.error("Shortening failed:", e);
-                document.getElementById('shorten-status-text').innerText = "Using long link (Alias taken or key missing)";
+                console.error("TinyURL Error:", e);
+                finalGeneratedUrl = fullUrl;
+                document.getElementById('shorten-status-text').innerText = "Using long link (Limit reached or API Key error)";
             }
+
+            // Update UI
+            document.getElementById('final-link-input').value = finalGeneratedUrl;
+            document.getElementById('link-modal').classList.add('active');
 
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
@@ -568,7 +557,7 @@
         }
 
         function copyManualLink() { navigator.clipboard.writeText(document.getElementById('final-link-input').value); alert("Link Copied! 💖"); }
-        function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Hey, I made something special for you! Check it out: " + finalGeneratedUrl)}`); }
+        function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent("Hey, I made something special for you! Check it out here: " + finalGeneratedUrl)}`); }
         function toggleQRModal() { document.getElementById('qr-modal').classList.toggle('active'); }
         function toggleCoffeeModal() { document.getElementById('coffee-modal').classList.toggle('active'); }
         function copyMomo() {
@@ -581,11 +570,31 @@
             if (img) { const link = document.createElement("a"); link.href = img.src; link.download = "valentine-qr.png"; link.click(); }
         }
 
+        // --- RELOADER ---
+        function replayVoice() {
+            const voice = document.getElementById('voice-audio');
+            const bg = document.getElementById('bg-music');
+            bg.volume = 0.15;
+            voice.currentTime = 0;
+            voice.play();
+            voice.onended = () => bg.volume = 1.0;
+        }
+
+        function spawnHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = ['❤️', '💖', '💝', '🌸'][Math.floor(Math.random() * 4)];
+            heart.className = 'heart-particle';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.getElementById('heart-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('v')) {
                 document.getElementById('setup-form').style.display = 'none';
-                document.getElementById('snow-layer').style.display = 'none';
                 document.getElementById('card-display').classList.remove('hidden');
                 try {
                     const data = JSON.parse(decodeURIComponent(atob(params.get('v'))));
@@ -611,36 +620,26 @@
                     document.getElementById('bg-music').src = data.s;
                     if (data.v && data.v !== "" && !data.v.includes('null')) {
                         document.getElementById('voice-audio').src = data.v;
+                        document.getElementById('replay-voice-btn').classList.remove('hidden');
                     }
                 } catch (e) { console.error("Data error", e); }
             }
         };
 
-        // IOS COMPATIBLE PLAY TRIGGER
         document.getElementById('click-area').addEventListener('click', function () {
             this.style.display = 'none';
             document.getElementById('hero-page').classList.remove('opacity-0', 'invisible');
-
             const bgMusic = document.getElementById('bg-music');
             const voiceAudio = document.getElementById('voice-audio');
-
-            // Safari requires audio to be loaded inside a click event
-            bgMusic.load();
-            bgMusic.play().catch(e => console.log("Autoplay blocked"));
-
             setInterval(spawnHeart, 350);
-
+            bgMusic.play();
             if (voiceAudio.src && voiceAudio.src !== "" && !voiceAudio.src.includes('null')) {
-                voiceAudio.load();
                 bgMusic.volume = 0.15;
                 setTimeout(() => {
-                    voiceAudio.play().catch(e => console.log("Voice blocked"));
-                    voiceAudio.onended = () => {
-                        bgMusic.volume = 1.0;
-                    };
+                    voiceAudio.play();
+                    voiceAudio.onended = () => bgMusic.volume = 1.0;
                 }, 1000);
             }
-
             if (images.length > 1) {
                 setInterval(() => {
                     currentSlide = (currentSlide + 1) % images.length;
@@ -649,16 +648,6 @@
                 }, 4500);
             }
         });
-
-        function spawnHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = ['❤️', '💖', '💝', '🌸'][Math.floor(Math.random() * 4)];
-            heart.className = 'heart-particle';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-            document.getElementById('heart-container').appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
-        }
     </script>
 </body>
 
